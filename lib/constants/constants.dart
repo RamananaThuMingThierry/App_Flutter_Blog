@@ -26,11 +26,11 @@ InputDecoration kInputDecoration(String label){
 
 /** -------------- Button --------------------- **/
 
-TextButton kTextButton(String label, Function onPressed){
+TextButton kTextButton(String label, Function onPressed, Color? color){
   return TextButton(
     child: Text(label, style: TextStyle(color: Colors.white),),
     style: ButtonStyle(
-      backgroundColor: MaterialStateColor.resolveWith((states) => Colors.blue),
+      backgroundColor: MaterialStateColor.resolveWith((states) => color!),
       padding: MaterialStateProperty.resolveWith((states) => EdgeInsets.symmetric(vertical: 10))
     ),
     onPressed: () => onPressed(),

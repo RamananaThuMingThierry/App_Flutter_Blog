@@ -1,4 +1,7 @@
 import 'package:blog/screens/auth/login.dart';
+import 'package:blog/screens/posts/post_form.dart';
+import 'package:blog/screens/posts/post_screen.dart';
+import 'package:blog/screens/profiles/profiles.dart';
 import 'package:blog/services/user_services.dart';
 import 'package:flutter/material.dart';
 
@@ -10,16 +13,48 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // Déclarations des variables
+  int? currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Acceuil'),
+        elevation: 0,
         actions: [
           IconButton(
               onPressed: () => logout().then((value) => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => Login()), (route) => false)),
               icon: Icon(Icons.logout))
         ],
+      ),
+      body: currentIndex == 0 ? PostScreens() : Profiles(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => PostForm()), (route) => false),
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        notchMargin: 5,
+        elevation: 5,
+        clipBehavior: Clip.antiAlias,
+        shape: CircularNotchedRectangle(),
+        child: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home,),
+                label: ''
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person,),
+                label: ''
+            ),
+          ],
+          currentIndex: currentIndex!,
+          onTap: (valeur) => setState(() {
+            currentIndex = valeur;
+          }),
+        ),
       ),
     );
   }

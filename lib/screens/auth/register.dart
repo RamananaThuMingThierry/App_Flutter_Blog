@@ -108,7 +108,7 @@ class _RegisterState extends State<Register> {
                   _registerUser();
                 });
               }
-            }),
+            }, Colors.blue),
 
             SizedBox(height: 10,),
 
