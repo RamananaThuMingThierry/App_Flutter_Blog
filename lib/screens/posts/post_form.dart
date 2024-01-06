@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:blog/api/api_response.dart';
 import 'package:blog/constants/constants.dart';
+import 'package:blog/screens/auth/login.dart';
 import 'package:blog/screens/home.dart';
+import 'package:blog/services/post_services.dart';
+import 'package:blog/services/user_services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,7 +22,7 @@ class _PostFormState extends State<PostForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController body = TextEditingController();
   bool loading = false;
-  File? imageFile;
+  File? imageFile = null;
   final _picker = ImagePicker();
 
   Future getImage() async{
@@ -30,6 +34,22 @@ class _PostFormState extends State<PostForm> {
     }
   }
 
+  void _createPost() async {
+    String? image = imageFile == null ? null : getStringImage(imageFile);
+    ApiResponse apiResponse = await createPost(body.text, image!);
+
+    if(apiResponse.error == null){
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => Home()), (route) => false);
+    }else if(apiResponse.error == unauthorized){
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => Login()), (route) => false);
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${apiResponse.error}")));
+      setState(() {
+        loading = !loading;
+      });
+    }
+    
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,6 +109,7 @@ class _PostFormState extends State<PostForm> {
                   setState(() {
                     loading = !loading;
                   });
+                  _createPost();
                 }
               }, Colors.blue),
             ),

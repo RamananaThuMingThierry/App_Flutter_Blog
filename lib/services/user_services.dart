@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:blog/api/api_response.dart';
 import 'package:blog/constants/constants.dart';
 import 'package:blog/models/user.dart';
@@ -123,4 +124,10 @@ Future<ApiResponse> register(String name, String email, String password) async{
   }
 
   return apiResponse;
+}
+
+/** --------------- Get base64 encoded image --------------------- **/
+String? getStringImage(File? file){
+  if(file == null) return null;
+  return base64Encode(file.readAsBytesSync());
 }
