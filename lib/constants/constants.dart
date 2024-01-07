@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 
 /** ------------- String -----------**/
 
-const baseURL = 'http://192.168.161.146:8000/api';
+const baseURL = 'http://192.168.1.107:8000/api';
 const loginURL = baseURL + '/login';
 const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
 const userURL = baseURL + '/user';
-const postsURL = baseURL + '/posts';
+const postsURL = baseURL + '/all_posts';
+const createPostsURL = baseURL + '/posts';
 const comments = baseURL + '/comments';
 
 /** -------------- Erreurs -------------- **/
 const serverError = 'Erreur du serveur';
 const unauthorized = 'Non autorisé';
-const somethingWentWrong = 'Quelque chose s\'est mal passé essaie encore';
+const somethingWentWrong = 'Quelque chose s\'est mal passé! essaie encore';
 
 /** --------------- Input Decoration ---------------- **/
 
@@ -49,4 +50,24 @@ Row kLoginOrRegisterHint(String text, String label, Function onTap){
       ),
     ],
   );
+}
+
+Expanded KBtnLikesOrComment({int? value, required Function onTap, IconData? iconData, Color? color}){
+  return Expanded(
+      child: Material(
+        child: InkWell(
+          onTap: () => onTap,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(iconData, size: 16, color: color,),
+                SizedBox(width: 4,),
+                Text("$value")
+              ],
+            ),
+          ),
+        ),
+      ));
 }

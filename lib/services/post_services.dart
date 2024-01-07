@@ -9,18 +9,22 @@ import 'package:http/http.dart' as http;
 /** ---------------- Get alL Posts ---------------- **/
 Future<ApiResponse> getAllPosts() async{
   ApiResponse apiResponse = ApiResponse();
+
   try{
     String token = await getToken();
-    final rep = await http.get(Uri.parse(postsURL),
+    var url = Uri.parse(postsURL);
+    print("*---------------- Url : $url");
+    final response = await http.get(url,
       headers: {
-        'Accept' : 'application/json',
+        'Accept': 'application/json',
         'Authorization' : 'Bearer $token'
       }
     );
+    print(response.statusCode);
 
-    switch(rep.statusCode){
+   switch(response.statusCode){
       case 200:
-        apiResponse.data = jsonDecode(rep.body)['posts'].map((p) => Post.fromJson(p));
+        apiResponse.data = jsonDecode(response.body)['posts'];
         apiResponse.data as List<dynamic>;
         break;
       case 401:
@@ -37,11 +41,14 @@ Future<ApiResponse> getAllPosts() async{
 }
 
 /** --------------- Create Post ----------------- **/
-Future<ApiResponse> createPost(String body, String? image) async{
+Future<ApiResponse> createPost({String? body, String? image}) async{
   ApiResponse apiResponse = ApiResponse();
+  print("Image : ${image == null ? 'oui' : 'non'}");
   try{
     String token = await getToken();
-    final rep = await http.post(Uri.parse(postsURL),
+    var url = Uri.parse(createPostsURL);
+    final rep = await http.post(
+      url,
       headers: {
         'Accept': 'application/json',
         'Authorization' : 'Bearer $token'
@@ -55,6 +62,9 @@ Future<ApiResponse> createPost(String body, String? image) async{
         'body': body
       }
     );
+
+    print("Status : ${rep.statusCode}");
+
     switch(rep.statusCode){
       case 200:
         apiResponse.data = jsonDecode(rep.body);

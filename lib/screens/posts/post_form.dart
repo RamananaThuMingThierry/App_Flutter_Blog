@@ -35,9 +35,9 @@ class _PostFormState extends State<PostForm> {
   }
 
   void _createPost() async {
+    print("Image File : $imageFile");
     String? image = imageFile == null ? null : getStringImage(imageFile);
-    ApiResponse apiResponse = await createPost(body.text, image!);
-
+     ApiResponse apiResponse = await createPost(body: body.text,image: image);
     if(apiResponse.error == null){
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => Home()), (route) => false);
     }else if(apiResponse.error == unauthorized){
@@ -48,7 +48,6 @@ class _PostFormState extends State<PostForm> {
         loading = !loading;
       });
     }
-    
   }
   @override
   Widget build(BuildContext context) {
