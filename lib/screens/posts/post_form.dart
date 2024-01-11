@@ -3,15 +3,21 @@ import 'dart:math';
 
 import 'package:blog/api/api_response.dart';
 import 'package:blog/constants/constants.dart';
+import 'package:blog/models/post.dart';
 import 'package:blog/screens/auth/login.dart';
 import 'package:blog/screens/home.dart';
 import 'package:blog/services/post_services.dart';
 import 'package:blog/services/user_services.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PostForm extends StatefulWidget {
-  const PostForm({Key? key}) : super(key: key);
+  final Post? post;
+  final String? titre;
+  final String? nomBtnActin;
+
+  PostForm({this.post, this.titre, this.nomBtnActin});
 
   @override
   State<PostForm> createState() => _PostFormState();
@@ -35,7 +41,6 @@ class _PostFormState extends State<PostForm> {
   }
 
   void _createPost() async {
-    print("Image File : $imageFile");
     String? image = imageFile == null ? null : getStringImage(imageFile);
      ApiResponse apiResponse = await createPost(body: body.text,image: image);
     if(apiResponse.error == null){
@@ -49,13 +54,38 @@ class _PostFormState extends State<PostForm> {
       });
     }
   }
+
+  void _editPost(int postId) async{
+    ApiResponse apiResponse = await updatePost(postId, body.text);
+
+    if(apiResponse.error == null){
+
+      Navigator.pop(context);
+
+    }else if(apiResponse.error == unauthorized){
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => Login()), (route) => false);
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${apiResponse.error}")));
+      setState(() {
+        loading = !loading;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    if(widget.post != null){
+      body.text = widget.post!.body! ?? '';
+    }
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Text("Ajouter un nouveau post", style: TextStyle(color: Colors.grey),),
+        title: Text("${widget.titre}", style: TextStyle(color: Colors.grey),),
         centerTitle: true,
       ),
       body: loading
@@ -64,7 +94,9 @@ class _PostFormState extends State<PostForm> {
       )
       : ListView(
         children: [
-          Container(
+          widget.post != null
+              ? SizedBox()
+              : Container(
             width: MediaQuery.of(context).size.width,
             height: 200,
             decoration: BoxDecoration(
@@ -103,12 +135,12 @@ class _PostFormState extends State<PostForm> {
             SizedBox(height: 10,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: kTextButton("Enregistrer", (){
+              child: kTextButton("${widget.nomBtnActin}", (){
                 if(_formKey.currentState!.validate()){
                   setState(() {
                     loading = !loading;
                   });
-                  _createPost();
+                  widget.post == null ? _createPost() : _editPost(widget.post!.id ?? 0);
                 }
               }, Colors.blue),
             ),

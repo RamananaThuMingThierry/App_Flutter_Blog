@@ -46,7 +46,7 @@ Future<ApiResponse> createPost({String? body, String? image}) async{
   print("Image : ${image == null ? 'oui' : 'non'}");
   try{
     String token = await getToken();
-    var url = Uri.parse(createPostsURL);
+    var url = Uri.parse(postsURL);
     final rep = await http.post(
       url,
       headers: {
@@ -139,6 +139,41 @@ Future<ApiResponse> deletePost(int postId) async{
         break;
       case 403:
         apiResponse.data = jsonDecode(rep.body)['message'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  }catch(e){
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
+/** ---------- Like or Dislike Post ---------------- **/
+Future<ApiResponse> likeUnlikePost(int postId) async{
+  ApiResponse apiResponse = ApiResponse();
+
+  try{
+    String token = await getToken();
+    var url = Uri.parse('$postsURL/$postId/likes');
+
+    print("url : ${url}");
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Accept' : 'application/json',
+        'Authorization' : 'Bearer $token'
+      }
+    );
+
+    switch(response.statusCode){
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['message'];
         break;
       case 401:
         apiResponse.error = unauthorized;

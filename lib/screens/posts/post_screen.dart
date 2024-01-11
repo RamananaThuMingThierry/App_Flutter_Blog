@@ -2,6 +2,7 @@ import 'package:blog/api/api_response.dart';
 import 'package:blog/constants/constants.dart';
 import 'package:blog/models/post.dart';
 import 'package:blog/screens/auth/login.dart';
+import 'package:blog/screens/posts/post_form.dart';
 import 'package:blog/services/post_services.dart';
 import 'package:blog/services/user_services.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,32 @@ class _PostScreensState extends State<PostScreens> {
       logout().then((value) => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => Login()), (route) => false));
     }else{
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${apiResponse.error}")));
+    }
+  }
+
+  // Post like or dislike
+  void handlePostLikeDislike(int postId) async {
+
+    ApiResponse apiResponse = await likeUnlikePost(postId);
+    print("Je suis là");
+    if(apiResponse.error == null){
+      retreivePosts();
+    }else if(apiResponse.error == unauthorized){
+      logout().then((value) => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => Login()), (route) => false));
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${apiResponse.error}")));
+    }
+  }
+
+  // Delete Post
+  void handleDeletePost(int postId) async{
+    ApiResponse response = await deletePost(postId);
+    if(response.error == null){
+      retreivePosts();
+    }else if(response.error == unauthorized){
+      logout().then((value) => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => Login()), (route) => false));
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${response.error}")));
     }
   }
 
@@ -98,8 +125,10 @@ class _PostScreensState extends State<PostScreens> {
                             onSelected: (valeur){
                               if(valeur == "Modifier"){
                                   // Modifier
+                                  Navigator.push(context, MaterialPageRoute(builder: (ctx) => PostForm(titre: "Modifier Post",post: post, nomBtnActin: "Modifier")));
                               }else{
                                   // Supprimer
+                                handleDeletePost(post.id ?? 0);
                               }
                             },
                             itemBuilder: (ctx) => [
@@ -133,19 +162,31 @@ class _PostScreensState extends State<PostScreens> {
                   )
                   )
                   :
-                  SizedBox(height: post!.image == null ? 4 : 10,),
+                  SizedBox(height: post!.image == null ? 0 : 10,),
                   Row(
                     children: [
-                      KBtnLikesOrComment(value: 0, onTap: (){}, iconData: Icons.favorite, color: Colors.grey),
+                      KBtnLikesOrComment(
+                          value: post.likesCount ?? 0,
+                          onTap: (){
+                              print("Nous somme là!");
+                              handlePostLikeDislike(post.id ?? 0);
+                          },
+                          iconData: post.selfLiked == true ? Icons.favorite : Icons.favorite_outline,
+                          color: post.selfLiked == true ? Colors.red : Colors.grey),
                       Container(
-                        height: 25,
+                        height: 40,
                         width: .5,
                         color: Colors.black38,
                       ),
                       KBtnLikesOrComment(value: 0, onTap: (){}, iconData: Icons.comment, color: Colors.grey),
                       Divider(thickness: 1,color: Colors.black38,height: 1,),
                     ],
-                  )
+                  ),
+                  Container(
+                    height: .5,
+                    color: Colors.black38,
+                    width: MediaQuery.of(context).size.width,
+                  ),
                 ]
               )
             );
@@ -153,4 +194,5 @@ class _PostScreensState extends State<PostScreens> {
           ),
         );
   }
+
 }

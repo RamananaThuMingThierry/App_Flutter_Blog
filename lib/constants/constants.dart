@@ -7,8 +7,7 @@ const loginURL = baseURL + '/login';
 const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
 const userURL = baseURL + '/user';
-const postsURL = baseURL + '/all_posts';
-const createPostsURL = baseURL + '/posts';
+const postsURL = baseURL + '/posts';
 const comments = baseURL + '/comments';
 
 /** -------------- Erreurs -------------- **/
@@ -56,7 +55,7 @@ Expanded KBtnLikesOrComment({int? value, required Function onTap, IconData? icon
   return Expanded(
       child: Material(
         child: InkWell(
-          onTap: () => onTap,
+          onTap: () => onTap(),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Row(

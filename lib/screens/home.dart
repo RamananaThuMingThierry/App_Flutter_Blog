@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
       ),
       body: currentIndex == 0 ? PostScreens() : Profiles(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => PostForm()), (route) => false),
+        onPressed: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => PostForm(titre: "Ajouter une Post", nomBtnActin: "Enregistre",)), (route) => false),
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

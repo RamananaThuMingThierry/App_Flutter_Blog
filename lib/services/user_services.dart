@@ -107,6 +107,8 @@ Future<ApiResponse> register(String name, String email, String password) async{
         }
     );
 
+    print("***************** Users : ${response.statusCode}");
+
     switch(response.statusCode){
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));

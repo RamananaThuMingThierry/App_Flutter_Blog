@@ -21,7 +21,6 @@ class _LoadingState extends State<Loading> {
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => Login()), (route) => false);
     }else{
       ApiResponse apiResponse = await getUserDetail();
-
       if(apiResponse.error == null){
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => Home()), (route) => false);
       }else if(apiResponse.error == unauthorized){
