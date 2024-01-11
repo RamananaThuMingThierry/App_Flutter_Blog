@@ -2,6 +2,7 @@ import 'package:blog/api/api_response.dart';
 import 'package:blog/constants/constants.dart';
 import 'package:blog/models/post.dart';
 import 'package:blog/screens/auth/login.dart';
+import 'package:blog/screens/comments/comment_screen.dart';
 import 'package:blog/screens/posts/post_form.dart';
 import 'package:blog/services/post_services.dart';
 import 'package:blog/services/user_services.dart';
@@ -178,7 +179,9 @@ class _PostScreensState extends State<PostScreens> {
                         width: .5,
                         color: Colors.black38,
                       ),
-                      KBtnLikesOrComment(value: 0, onTap: (){}, iconData: Icons.comment, color: Colors.grey),
+                      KBtnLikesOrComment(value: 0, onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (ctx) => CommentScreen()));
+                      }, iconData: Icons.comment, color: Colors.grey),
                       Divider(thickness: 1,color: Colors.black38,height: 1,),
                     ],
                   ),
