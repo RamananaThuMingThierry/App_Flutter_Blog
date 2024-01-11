@@ -8,7 +8,7 @@ const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
 const userURL = baseURL + '/user';
 const postsURL = baseURL + '/posts';
-const comments = baseURL + '/comments';
+const commentsURL = baseURL + '/comments';
 
 /** -------------- Erreurs -------------- **/
 const serverError = 'Erreur du serveur';
