@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:blog/api/api_response.dart';
 import 'package:blog/constants/constants.dart';
@@ -87,7 +86,7 @@ Future<ApiResponse> createComment({int? postId, String? comment}) async{
 }
 
 /** --------------- Update Post ----------------- **/
-Future<ApiResponse> updatePost(int commentId, String comment) async{
+Future<ApiResponse> updateComment(int commentId, String comment) async{
 
   ApiResponse apiResponse = ApiResponse();
 

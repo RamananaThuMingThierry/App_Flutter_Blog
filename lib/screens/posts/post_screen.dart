@@ -179,10 +179,9 @@ class _PostScreensState extends State<PostScreens> {
                         width: .5,
                         color: Colors.black38,
                       ),
-                      KBtnLikesOrComment(value: 0, onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (ctx) => CommentScreen()));
+                      KBtnLikesOrComment(value: post.commentsCount, onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (ctx) => CommentScreen(postId: post.id,)));
                       }, iconData: Icons.comment, color: Colors.grey),
-                      Divider(thickness: 1,color: Colors.black38,height: 1,),
                     ],
                   ),
                   Container(
