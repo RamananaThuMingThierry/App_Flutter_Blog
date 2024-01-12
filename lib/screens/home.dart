@@ -15,12 +15,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   // Déclarations des variables
   int? currentIndex = 0;
+  String? title = "Acceuil";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Acceuil'),
+        title: Text('$title'),
+        backgroundColor: Colors.blueGrey,
         elevation: 0,
         actions: [
           IconButton(
@@ -53,6 +55,15 @@ class _HomeState extends State<Home> {
           currentIndex: currentIndex!,
           onTap: (valeur) => setState(() {
             currentIndex = valeur;
+            if(currentIndex == 0){
+              setState(() {
+                title = "Acceuil";
+              });
+            }else{
+              setState(() {
+                title = "Apropos";
+              });
+            }
           }),
         ),
       ),

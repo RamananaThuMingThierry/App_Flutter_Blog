@@ -19,7 +19,7 @@ class _ProfilesState extends State<Profiles> {
   @override
   User? users;
   bool loading = true;
-  File? imageFile = null;
+  File? imageFile;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController name = TextEditingController();
@@ -36,12 +36,28 @@ class _ProfilesState extends State<Profiles> {
 
   void getUsers() async{
     ApiResponse apiResponse = await getUserDetail();
+    print("ApiResponse : ${apiResponse.error}");
     if(apiResponse.error == null){
       setState(() {
         users = apiResponse.data as User?;
-        name.text ?? '';
+        name.text = users!.name ?? '';
         loading = false;
       });
+      print("users: ${users!.name}");
+    }else if(apiResponse.error == unauthorized){
+      logout().then((value) => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => Login()), (route) => false));
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${apiResponse.error}")));
+    }
+  }
+
+  void updateProfile() async{
+    ApiResponse apiResponse = await updateUser(name.text, getStringImage(imageFile));
+    setState(() {
+      loading = false;
+    });
+    if(apiResponse.error == null){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${apiResponse.data}")));
     }else if(apiResponse.error == unauthorized){
       logout().then((value) => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx) => Login()), (route) => false));
     }else{
@@ -96,7 +112,7 @@ class _ProfilesState extends State<Profiles> {
             kTextButton("Modifier", (){
                 if(_formKey.currentState!.validate()){
                   setState(() {
-                    loading = false;
+                    loading = true;
                   });
                   updateProfile();
                 }
@@ -106,6 +122,4 @@ class _ProfilesState extends State<Profiles> {
 
     );
   }
-
-  void updateProfile() {}
 }

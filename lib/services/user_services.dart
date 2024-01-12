@@ -55,6 +55,44 @@ Future<ApiResponse> getUserDetail() async{
   return apiResponse;
 }
 
+
+Future<ApiResponse> updateUser(String name, String? image) async{
+  ApiResponse apiResponse = ApiResponse();
+
+  try{
+    String token = await getToken();
+    final response = await http.put(
+      Uri.parse(userURL),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+      body: image == null
+        ? {'name' : name}
+        : {
+        'name' : name,
+        'image' : image
+      }
+    );
+
+    switch(response.statusCode){
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['message'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  }catch(e){
+    apiResponse.error = serverError;
+  }
+
+  return apiResponse;
+}
+
 Future<ApiResponse> login(String email, String password) async{
   ApiResponse apiResponse = ApiResponse();
 

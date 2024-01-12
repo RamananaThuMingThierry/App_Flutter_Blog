@@ -83,8 +83,7 @@ class _PostScreensState extends State<PostScreens> {
           itemCount: _postList!.length,
           itemBuilder: (BuildContext context, int index){
             Post post = _postList![index];
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+            return Card(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -99,8 +98,11 @@ class _PostScreensState extends State<PostScreens> {
                                   width: 38,
                                   height: 38,
                                   decoration: BoxDecoration(
-                                    image: post.user!.image != null 
-                                        ? DecorationImage(image: NetworkImage('${post.user!.image}')) : null,
+                                    image: post.user!.image != null
+                                        ? DecorationImage(
+                                        image: NetworkImage('${post.user!.image}'),
+                                        fit: BoxFit.cover
+                                    ) : null,
                                     borderRadius: BorderRadius.circular(25),
                                     color: Colors.amber
                                   ),
@@ -148,22 +150,31 @@ class _PostScreensState extends State<PostScreens> {
                       ],
                     ),
               SizedBox(height: 12,),
-              Text("${post.body}"),
               post.image != null
                   ?
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 180,
-                    margin: EdgeInsets.only(top: 5),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage('${post.image}'),
-                            fit: BoxFit.cover
+                  Column(
+                    children: [
+                      Text("${post.body}"),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 180,
+                        margin: EdgeInsets.only(top: 5),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage('${post.image}'),
+                                fit: BoxFit.cover
+                            ),
+                      )
+                      ),
+                    ],
+                  )
+                  : Container(
+                      height: 180,
+                      color: Colors.blueGrey,
+                      child: Center(
+                        child: Text("${post.body}", style: TextStyle(color: Colors.white),),
                         ),
-                  )
-                  )
-                  :
-                  SizedBox(height: post!.image == null ? 0 : 10,),
+                      ),
                   Row(
                     children: [
                       KBtnLikesOrComment(

@@ -54,6 +54,7 @@ Row kLoginOrRegisterHint(String text, String label, Function onTap){
 Expanded KBtnLikesOrComment({int? value, required Function onTap, IconData? iconData, Color? color}){
   return Expanded(
       child: Material(
+        color: Colors.transparent,
         child: InkWell(
           onTap: () => onTap(),
           child: Padding(
